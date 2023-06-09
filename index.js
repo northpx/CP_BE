@@ -1,0 +1,46 @@
+const express = require("express");
+const dbConnect = require("./config/dbConnect");
+const app = express()
+const dotenv = require("dotenv");
+dotenv.config();
+const PORT = process.env.PORT || 4000;
+const cors = require('cors')
+const authRoute = require('./routes/authRoute');
+const productRoute = require('./routes/productRoute')
+const blogRoute = require('./routes/blogRoute')
+const prodcategoryRoute = require('./routes/prodcategoryRoute')
+const blogCatRoute = require('./routes/blogCatRoute')
+const brandRoute = require('./routes/brandRoute')
+const couponRoute = require('./routes/couponRoute')
+const colorRoute = require('./routes/colorRoute')
+const enqRoute = require('./routes/enqRoute')
+const uploadRoute = require('./routes/uploadRoute')
+const cookieParser = require("cookie-parser")
+const bodyParser = require("body-parser");
+const morgan = require("morgan")
+const { notFound, errorHandler } = require("./middlewares/errorHandler");
+
+app.use(cors())
+app.use(morgan('dev'))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(cookieParser())
+
+app.use('/api/user',authRoute)
+app.use('/api/product', productRoute)
+app.use('/api/blog', blogRoute)
+app.use('/api/prodcategory', prodcategoryRoute)
+app.use('/api/blogcat', blogCatRoute)
+app.use('/api/brand', brandRoute)
+app.use('/api/coupon', couponRoute)
+app.use('/api/color', colorRoute)
+app.use('/api/enquiry', enqRoute)
+app.use('/api/upload', uploadRoute)
+
+app.use(notFound)
+app.use(errorHandler)
+
+app.listen(PORT, ()=>{
+    dbConnect()
+    console.log(`Server is running at port ${PORT}`)
+})
